@@ -7,6 +7,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy: 
+      matrix: 
+        jvm-options: 
+          - "-Xms512m -Xmx1024m -XX:+UseG1GC" 
+
     steps:
     - uses: actions/checkout@v4
 
@@ -16,8 +22,13 @@ jobs:
         java-version: '17'
         cache: 'maven'
 
+    - name: Print JVM Flags
+      run: echo "The following JVM Flags were used:\n${{ matrix.jvm-options }}"
+
     - name: Build and Test with Maven
       timeout-minutes: 15
+      env: 
+        MAVEN_OPTS: ${{ matrix.jvm-options }}
       run: ./mvnw -B verify
 
     - name: Get JaCoCo Coverage
