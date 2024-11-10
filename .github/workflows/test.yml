@@ -23,7 +23,7 @@ jobs:
         cache: 'maven'
 
     - name: Print JVM Flags
-      run: echo "The following JVM Flags were used:\n${{ matrix.jvm-options }}"
+      run: echo "The following JVM Flags were used: \n${{ matrix.jvm-options }}"
 
     - name: Build and Test with Maven
       timeout-minutes: 15
