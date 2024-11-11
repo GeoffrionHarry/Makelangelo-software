@@ -11,7 +11,7 @@ jobs:
     strategy: 
       matrix: 
         jvm-options: 
-          - "-XX:+UseG1GC -XX:+PrintGCDetails -Xlog:gc+heap=debug -XX:+UseCompressedOops" 
+          - "-Xms256m -Xmx512m -XX:+UseG1GC -XX:+PrintGCDetails -Xlog:gc+heap=debug -XX:+UseCompressedOops" 
           #- "-XX:+UseParallelGC -XX:+PrintGCDetails -Xlog:gc+heap=debug -XX:+UseCompressedOops" 
           #- "-XX:+UseParallelGC -XX:+PrintGCDetails -XX:+PrintFlagsFinal" 
 
