@@ -11,7 +11,8 @@ jobs:
     strategy: 
       matrix: 
         jvm-options: 
-          - "-XX:+UseParallelGC -XX:+PrintFlagsFinal" 
+          - "-XX:+UseParallelGC -XX:+PrintGCDetails" 
+          #- "-XX:+UseParallelGC -XX:+PrintGCDetails -XX:+PrintFlagsFinal" 
 
     steps:
     - uses: actions/checkout@v4
