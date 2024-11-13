@@ -11,12 +11,12 @@ jobs:
     strategy: 
       matrix: 
         jvm-options: 
-          - -XX:+TraceExceptions
-          #- "-Xms512m -Xmx1024m"
-          #- "-XX:+TieredCompilation"
-          #- "-XX:+UseParallelGC" 
-          #- "-XX:+PrintGCDetails" 
-          #- "-XX:+UseCompressedOops"
+          - "-Xms512m -Xmx1024m"
+          - "-XX:+TieredCompilation"
+          - "-XX:+UseParallelGC" 
+          - "-XX:+PrintGCDetails" 
+          - "-XX:+UseCompressedOops"
+          
     steps:
     - uses: actions/checkout@v4
 
