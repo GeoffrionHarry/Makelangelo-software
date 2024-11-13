@@ -13,7 +13,7 @@ jobs:
         jvm-options: 
           - "-Xms512m -Xmx1024m"
           - "-XX:+TieredCompilation"
-          #- "-XX:+UseParallelGC" 
+          - "-XX:+UseParallelGC" 
           - "-XX:+PrintGCDetails"
           - "-XX:+UseCompressedOops"
 
