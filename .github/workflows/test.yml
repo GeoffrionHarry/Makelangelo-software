@@ -11,7 +11,8 @@ jobs:
     strategy: 
       matrix: 
         jvm-options: 
-          - "-XX:+TieredCompilation"
+          - "-Xms512m -Xmx1024m"
+          #- "-XX:+TieredCompilation"
           #- "-XX:+UseParallelGC" 
           #- "-XX:+PrintGCDetails" 
           #- "-XX:+UseCompressedOops"
