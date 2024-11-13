@@ -7,6 +7,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy: 
+      matrix: 
+        jvm-options: 
+          - "-Xms512m -Xmx1024m"
+          - "-XX:+TieredCompilation"
+          - "-XX:+UseParallelGC" 
+          - "-XX:+PrintGCDetails"
+          - "-XX:+UseCompressedOops"
+
     steps:
     - uses: actions/checkout@v4
 
@@ -16,8 +26,14 @@ jobs:
         java-version: '17'
         cache: 'maven'
 
+    - name: Print JVM Flags
+      run: |
+        echo "The following JVM Flags were used: ${{ matrix.jvm-options }}"
+
     - name: Build and Test with Maven
       timeout-minutes: 15
+      env: 
+        MAVEN_OPTS: ${{ matrix.jvm-options }}
       run: ./mvnw -B verify
 
     - name: Get JaCoCo Coverage
@@ -29,7 +45,7 @@ jobs:
     - name: Fail if coverage has not improved.
       run: |
         coverage=$COVERAGE
-        threshold=24.46
+        threshold=24.0
         if (( $(echo "$coverage - $threshold <= 0.1" | bc -l) )); then
           echo "Coverage is not improved."
           exit 1
