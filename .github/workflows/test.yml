@@ -11,7 +11,7 @@ jobs:
     strategy: 
       matrix: 
         jvm-options: 
-          - "-XX:+UseParallelGC -XX:+PrintGCDetails -XX:+UseCompressedOops -XX:+UseLargePages" 
+          - "-XX:+UseParallelGC -XX:+PrintGCDetails -XX:+UseCompressedOops -XX:MinHeapFreeRatio=20" 
           #- "-XX:+UseParallelGC -XX:+PrintGCDetails -XX:+UseCompressedOops -XX:+AllowParallelDefineClass" 
           #- "-XX:+UseParallelGC -XX:+PrintGCDetails -Xlog:gc+heap=debug -XX:+UseCompressedOops" 
 
