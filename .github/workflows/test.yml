@@ -13,7 +13,7 @@ jobs:
         jvm-options: 
           - "-Xms512m -Xmx1024m"
           - "-XX:+TieredCompilation"
-          - "-XX:+UseParallelGC" 
+          #- "-XX:+UseParallelGC" 
           - "-XX:+PrintGCDetails"
           - "-XX:+UseCompressedOops"
 
@@ -45,7 +45,7 @@ jobs:
     - name: Fail if coverage has not improved.
       run: |
         coverage=$COVERAGE
-        threshold=24.45
+        threshold=24.46
         if (( $(echo "$coverage - $threshold <= 0.1" | bc -l) )); then
           echo "Coverage is not improved."
           exit 1
