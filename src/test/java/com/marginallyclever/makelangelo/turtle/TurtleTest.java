@@ -1,13 +1,19 @@
 package com.marginallyclever.makelangelo.turtle;
 
-import com.marginallyclever.convenience.Point2D;
-import org.junit.jupiter.api.Test;
-
-import java.awt.*;
+import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import com.marginallyclever.convenience.LineCollection;
+import com.marginallyclever.convenience.LineSegment2D;
+import com.marginallyclever.convenience.Point2D;
 
 class TurtleTest {
 
@@ -283,5 +289,144 @@ class TurtleTest {
         for(int i=0;i<=10;++i) {
             assertTrue(new Point2D(i * 100, 0).distance(turtle.interpolate(d*(double)i/10.0)) < EPSILON);
         }
+    }
+
+
+    /*
+    Cette fonction cherche à valider le bon fonctionnement de la fonction countLoops()
+    qui compte le nombre de fois que la tortue a fait un trait non-relié aux autres ce
+    qui constitue un dessin fermé.
+    */
+    @Test
+    public void testCountLoops() {
+
+        // ARRANGE - create turtle new object
+        Turtle turtle = new Turtle();
+
+        // ACT - draw an initial "loop"
+        turtle.forward(1);
+        turtle.penDown();
+        turtle.forward(1);
+        turtle.penUp();
+
+        // ASSERT - expect 1 loop
+        assertEquals(1, turtle.countLoops());
+
+
+        // ACT - draw a second "loop" with two different movements
+        turtle.forward(1);
+        turtle.penDown();
+        turtle.rotate(90.0);
+        turtle.forward(1);
+        turtle.penUp();
+        // ASSERT - expect 2 loops
+        assertEquals(2, turtle.countLoops());
+
+        // ACT - draw a square
+        turtle.forward(1);
+        turtle.penDown();
+        turtle.forward(1);
+        turtle.rotate(90.0);
+        turtle.forward(1);
+        turtle.rotate(90.0);
+        turtle.forward(1);
+        turtle.rotate(90.0);
+        turtle.forward(1);
+        turtle.penUp();
+
+        // ASSERT - expect 3 loops (square is one loop)
+        assertEquals(3, turtle.countLoops());
+    }
+
+    /*
+     * Cette fonction valide le bon fonctionnement de reset dans la class 
+     * Turtle. Elle devrait remttre la tortue a sa position initiale.
+     * Et mettre la couleur a noir.
+     * x = 0 , y = 0, angle = 0
+     * Cette fonction de test est importante, car un decalage de la position
+     * initial de la tortue pourrait causer des erreurs dans les dessins.
+     */
+    @Test
+    public void reset() {
+        // ARRANGE + ACT - create turtle new object (reset implicitly called)
+        Turtle t = new Turtle();
+
+        // ASSERT - expected initial values for turtle
+        assertEquals(t.getPosition().x, 0.0);
+        assertEquals(t.getPosition().y, 0.0);
+        assertEquals(t.getColor(), Color.BLACK);
+        assertEquals(t.getAngle(), 0.0);
+        assertEquals(t.isUp(), true);
+    }
+
+    /*
+     * Cette fonction valide que lors de l'exécution de la fonction drawArc
+     * la tortue se déplace correctement et se retrouve la bonne position
+     * finale. 
+     * La verification de cette fonction est importante au bon fonctionnement
+     * de la tortue pour les dessins. La tortue doit se retrouver a la position
+     * du dernier segment de l'arc.
+     */
+    @Test
+    public void drawArc() {
+        // ARRANGE - create turtle new object and init variables
+        Turtle t = new Turtle();
+        double cx = 0;
+        double cy = 0;
+        double a1 = 0;
+        double a2 = Math.PI/2;
+        double r = 3;
+        int n = 10;
+
+        // ACT - draw an arc
+        t.drawArc(cx, cy, a1, a2, r, n); 
+        
+        // ASSERT - Validate Final position of the turtle is correct
+        assertEquals(Math.round(cx + Math.cos(a2) * r), 0);
+        assertEquals(Math.round(cy + Math.sin(a2) * r), 3);
+    }
+
+    
+
+
+    /*
+    Cette fonction valide que la fonction addLineSegments() ajoute les segments comme 
+    attendu (en terme de déplacement de la tortue).
+    */
+    @Test
+    public void testAddLineSegments() {
+        
+        // ARRANGE - create turtle and initialize line segments
+        Turtle turtle = new Turtle();
+        LineCollection segments = new LineCollection();
+        segments.add(new LineSegment2D(new Point2D(0, 0), new Point2D(10, 10), Color.BLACK));
+        segments.add(new LineSegment2D(new Point2D(10, 10), new Point2D(25, 25), Color.BLACK));
+
+        // ACT - add line segments to turtle
+        turtle.addLineSegments(segments);
+
+        // ASSERT - expect history to be of 6 and final coords to be (25.0, 25.0)
+        assertEquals("Turtle{history=6, px=25.0, py=25.0, nx=1.0, ny=0.0, angle=0.0, isUp=false, color=java.awt.Color[r=0,g=0,b=0], diameter=1.0}", turtle.toString());
+    
+    }
+
+    /*
+      Le but de ce test est de verifier que lorsque la tordue depasse les "bounds"
+      la taille des bounds est reajustee pour contenir la nouvelle position de la tortue.
+      Ceci est important afin de ne pas dessiner en dehors de la zone de dessin.
+     */
+    @Test
+    public void getBoundsInternal() {
+        // ARRANGE - create turtle new object
+        Turtle t = new Turtle();
+
+        // ACT - draw a line that goes beyond the bounds
+        Rectangle2D.Double currentBounds = t.getBounds();
+        t.forward(currentBounds.width + 100);
+        t.forward(currentBounds.height + 100);
+
+        // ASSERT - expected bounds to be updated
+        assertEquals(t.getBounds().width, currentBounds.width);
+        assertEquals(t.getBounds().height, currentBounds.height);
     }
 }
